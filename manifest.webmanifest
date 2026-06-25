@@ -1,25 +1,16 @@
 {
-  "name": "Gospel Path V1",
+  "name": "Gospel Path",
   "short_name": "Gospel Path",
-  "description": "Church keys assistant for progressions, fingerings, licks, organ presets, songs, annotations, and live mode.",
+  "description": "A church keys PWA for songs, chord paths, fingerings, licks, shout patterns, organ presets, and live performance.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "any",
-  "theme_color": "#0b0b0c",
-  "background_color": "#f7f4ed",
+  "background_color": "#0b0b0d",
+  "theme_color": "#0b0b0d",
   "icons": [
-    {
-      "src": "./icon.svg",
-      "sizes": "512x512",
-      "type": "image/svg+xml",
-      "purpose": "any"
-    },
-    {
-      "src": "./icon-maskable.svg",
-      "sizes": "512x512",
-      "type": "image/svg+xml",
-      "purpose": "maskable"
-    }
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ]
 }

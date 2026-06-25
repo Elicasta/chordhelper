@@ -1,44 +1,79 @@
 const assert = require('assert');
-const E = require('../music-engine.js');
+const {
+  ALL_KEYS,
+  realizeChord,
+  buildRoute,
+  generateLick,
+  parseProgressionTokens,
+  replacementFromChordLabSelection,
+  applyChordReplacement
+} = require('../music-engine.js');
 
-assert.strictEqual(E.numberToNote('b6', 'Eb'), 'Cb');
-assert.strictEqual(E.numberToNote('b7', 'Eb'), 'Db');
-assert.strictEqual(E.numberToChord('3', 'Eb', 'gospel'), 'G7#5');
+function test(name, fn) {
+  try {
+    fn();
+    console.log('PASS', name);
+  } catch (error) {
+    console.error('FAIL', name);
+    console.error(error);
+    process.exitCode = 1;
+  }
+}
 
-const parsed = E.parseProgression('1 - 4 - 3 - 5 b6 b7 1/5', 'Eb', 'gospel');
-assert.strictEqual(parsed.tokens.length, 7);
-assert.deepStrictEqual(parsed.tokens.map((t) => t.chordSymbol), [
-  'Ebmaj9',
-  'Abmaj9',
-  'G7#5',
-  'Bb13sus',
-  'Cbmaj7(#11)',
-  'Db13',
-  'Ebmaj9/Bb'
-]);
+test('all 12 keys are available', () => {
+  assert.deepStrictEqual(ALL_KEYS, ['C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B']);
+});
 
-const routes = E.routeFor({ key: 'Eb', from: '1', to: '4', style: 'gospel', intensity: 'churchy' });
-assert.strictEqual(routes.length, 3);
-assert.ok(routes[1].chords.some((ch) => ch.symbol.includes('G7#5')));
+test('b6 and b7 map correctly in Eb', () => {
+  assert.strictEqual(realizeChord('b6', null, 'Eb').symbol, 'Cb');
+  assert.strictEqual(realizeChord('b7', null, 'Eb').symbol, 'Db');
+});
 
-const fingering = E.fingeringFor('G7#5', { key: 'Eb', difficulty: 'easy' });
-assert.deepStrictEqual(fingering.leftHandNotes, ['G', 'F']);
-assert.ok(fingering.rightHandNotes.length >= 3);
+test('fat chord voicings include actual LH/RH notes', () => {
+  const checks = [
+    ['1','maj13','F','Fmaj13'],
+    ['1','maj13#11','F','Fmaj13(#11)'],
+    ['2m','min11','F','Gm11'],
+    ['5','13sus','F','C13sus'],
+    ['5','13b9','F','C13b9'],
+  ];
+  for (const [token, quality, key, expected] of checks) {
+    const r = realizeChord(token, quality, key);
+    assert.strictEqual(r.symbol, expected);
+    assert.ok(r.lh.startsWith('LH: '));
+    assert.ok(r.rh.startsWith('RH: '));
+    assert.ok(r.fingering.includes('RH fingers'));
+  }
+});
 
-const lick = E.lickFor({ key: 'Eb', chord: 'G7#5', target: 'Cm9', style: 'gospel' });
-assert.strictEqual(lick.notes.at(-1), 'C');
+test('route generation returns visible steps', () => {
+  const route = buildRoute('Eb', 1, 4, 'Gospel', 'Churchy');
+  assert.ok(route.length >= 3);
+  assert.ok(route[0].symbol);
+  assert.ok(route[0].token);
+});
 
-console.log('music-engine tests passed');
+test('lick generation returns notes and fingering', () => {
+  const lick = generateLick('Eb', '3dom', '6m11', 'Gospel', 'Medium', 'Churchy');
+  assert.ok(lick.notes.split(' - ').length >= 5);
+  assert.ok(lick.numbers.length > 0);
+  assert.ok(lick.fingering.startsWith('RH: '));
+});
 
+test('chord lab replacement updates token quality and color', () => {
+  const chordStep = { id:'c1', token:'1', qualityOverride:null, color:'green' };
+  const replacement = replacementFromChordLabSelection({ deg:'4', q:'maj13#11' }, 'F');
+  applyChordReplacement(chordStep, replacement);
+  assert.strictEqual(chordStep.token, '4');
+  assert.strictEqual(chordStep.qualityOverride, 'maj13#11');
+  assert.strictEqual(chordStep.color, 'green');
+  assert.strictEqual(replacement.realized.symbol, 'Bbmaj13(#11)');
+});
 
-const fatMajor = E.fatChordOptionsFor('1', { key: 'Eb' });
-assert.ok(fatMajor.some((ch) => ch.symbol === 'Ebmaj13'));
-assert.ok(fatMajor.some((ch) => ch.symbol === 'Eb6/9'));
-
-const fatDominant = E.fatChordOptionsFor('5', { key: 'Eb' });
-assert.ok(fatDominant.some((ch) => ch.symbol === 'Bb13sus'));
-assert.ok(fatDominant.some((ch) => ch.symbol === 'Bb13b9'));
-
-const fatMinor = E.fatChordOptionsFor('6', { key: 'Eb' });
-assert.ok(fatMinor.some((ch) => ch.symbol === 'Cm11'));
-assert.ok(E.fingeringFor('Abmaj13(#11)', { key: 'Eb' }).rightHandNotes.length >= 4);
+test('typed progression parser supports separators', () => {
+  assert.deepStrictEqual(parseProgressionTokens('1 - 4 - 5'), ['1','4','5']);
+  assert.deepStrictEqual(parseProgressionTokens('1 4 5'), ['1','4','5']);
+  assert.deepStrictEqual(parseProgressionTokens('1, 4, 5'), ['1','4','5']);
+  assert.deepStrictEqual(parseProgressionTokens('1 → 4 → 5'), ['1','4','5']);
+  assert.deepStrictEqual(parseProgressionTokens('1-4-5'), ['1','4','5']);
+});

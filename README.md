@@ -1,34 +1,39 @@
-# Gospel Path UX V2
+# Gospel Path UX V3.1 PWA
 
-This is a single-file PWA-style preview focused on the actual musician workflow.
+Gospel Path is an installable offline-first PWA for church keys players and organists.
 
-## What changed
+## What this build includes
 
-- Tabs now navigate to real pages:
-  - Songs
-  - Path
-  - Chord
-  - Licks
-  - Shout
-  - Organ
-  - Live
-- Songs page now contains the song library, chart, sections, chord cards, notes, writing/convert area, and inspector.
-- Path page is a dedicated route builder for experimenting with chord movement.
-- Chord page is a chord lab with fat chord palette and fingering.
-- Licks page is a target-aware lick builder.
-- Shout page has praise-break patterns, walkups, hits, and endings.
-- Organ page has drawbar/Leslie presets.
-- Live page is simplified and big.
-- Sidebar/inspector chord options can replace the currently selected chord.
-- Chords can be dragged and dropped to reorder progressions.
-- Explanation can be hidden.
-- Mobile layout uses page-based content and compact chord peek above bottom nav.
-- Light and dark mode use the same semantic color tokens.
+- Packaged PWA structure: `index.html`, `styles.css`, `music-engine.js`, `app.js`, `manifest.webmanifest`, `sw.js`, icons, README, and tests.
+- Songs and playlists with local persistence.
+- Chord tap flow with real LH/RH voicings and fingerings.
+- Chord Lab replacement that updates the selected chord token, quality, color, and fingering.
+- Path Builder that generates Safe, Churchy, and Crunchy/Shed route cards.
+- Safer route application flow: replace selected chord, replace section, append to section, or add as new section.
+- Typed progression parsing for hyphens, commas, arrows, and whitespace.
+- Lick Builder with editable visible lick cards.
+- Shout patterns and organ presets.
+- Live Mode with song and playlist pickers.
+- Light/dark mode and responsive mobile/iPad layouts.
 
-## Run
-
-Open `index.html` directly, or serve it locally:
+## Run locally
 
 ```bash
 python3 -m http.server 5173
 ```
+
+Then open:
+
+```text
+http://localhost:5173
+```
+
+## Tests
+
+```bash
+node tests/music-engine.test.js
+```
+
+## Notes
+
+This is still a frontend/local-state build. Data saves to `localStorage` on the device. No backend is required for this pass.
