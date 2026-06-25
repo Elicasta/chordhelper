@@ -1,60 +1,34 @@
-# Gospel Path V1
+# Gospel Path UX V2
 
-A static installable PWA prototype for church piano / organ players.
+This is a single-file PWA-style preview focused on the actual musician workflow.
 
-## What is included
+## What changed
 
-- Responsive iPad landscape workbench layout
-- Responsive iPad portrait chart-first layout
-- Mobile quick-control layout
-- Light and dark modes
-- Black / white UI with red, green, blue, yellow, purple, and orange semantic highlights
-- Pressable chord cards with fingerings
-- Fat chord palette for maj13, 6/9, m11, m13, 13sus, 13b9, 7#9, and altered dominant colors
-- Chord parser for number progressions and chord names
-- Path builder for gospel, CCM, preacher, shout, weird reharm, and plain modes
-- Lick / run generator
-- Shout music section builder
-- Organ preset panel with drawbar-style values
-- Songs library with built-in templates and user-created songs
-- Save-to-current-song flows
-- Live Mode with section navigation and panic-safe chord
-- Apple Pencil / touch / mouse ink canvas using Pointer Events
-- Highlight, pen, eraser, text note, and convert flow
-- Local persistence with `localStorage`
-- Offline install support using a service worker and web app manifest
+- Tabs now navigate to real pages:
+  - Songs
+  - Path
+  - Chord
+  - Licks
+  - Shout
+  - Organ
+  - Live
+- Songs page now contains the song library, chart, sections, chord cards, notes, writing/convert area, and inspector.
+- Path page is a dedicated route builder for experimenting with chord movement.
+- Chord page is a chord lab with fat chord palette and fingering.
+- Licks page is a target-aware lick builder.
+- Shout page has praise-break patterns, walkups, hits, and endings.
+- Organ page has drawbar/Leslie presets.
+- Live page is simplified and big.
+- Sidebar/inspector chord options can replace the currently selected chord.
+- Chords can be dragged and dropped to reorder progressions.
+- Explanation can be hidden.
+- Mobile layout uses page-based content and compact chord peek above bottom nav.
+- Light and dark mode use the same semantic color tokens.
 
-## How to run locally
+## Run
 
-Open `index.html` directly in a browser, or serve the folder:
+Open `index.html` directly, or serve it locally:
 
 ```bash
 python3 -m http.server 5173
 ```
-
-Then open:
-
-```text
-http://localhost:5173
-```
-
-For PWA install behavior, serving over localhost or HTTPS is best.
-
-## Handwriting conversion note
-
-The app stores ink strokes and provides a conversion workflow. Browser-native handwriting recognition is not dependable across iPad Safari, Chrome, and mobile browsers yet, so V1 uses a confirm-before-convert flow: write, tap Convert, confirm the recognized or typed progression, then convert it into real pressable chord data.
-
-## Files
-
-- `index.html` app shell
-- `styles.css` responsive UI and theme system
-- `music-engine.js` chord parser, routing, voicing, licks, seed songs
-- `app.js` app state, rendering, events, ink canvas, saving
-- `manifest.webmanifest` PWA manifest
-- `sw.js` offline service worker
-- `icon.svg` / `icon-maskable.svg` app icons
-
-
-## Patch note
-
-- Fixed mobile chord sheet clearance so fingering cards sit above the bottom nav and safe-area.

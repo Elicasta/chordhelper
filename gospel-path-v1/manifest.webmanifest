@@ -1,0 +1,25 @@
+{
+  "name": "Gospel Path V1",
+  "short_name": "Gospel Path",
+  "description": "Church keys assistant for progressions, fingerings, licks, organ presets, songs, annotations, and live mode.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "theme_color": "#0b0b0c",
+  "background_color": "#f7f4ed",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-maskable.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}

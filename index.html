@@ -1,21 +1,208 @@
 <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="theme-color" content="#0b0b0c" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="Gospel Path" />
-    <title>Gospel Path V1</title>
-    <link rel="manifest" href="./manifest.webmanifest" />
-    <link rel="icon" href="./icon.svg" type="image/svg+xml" />
-    <link rel="apple-touch-icon" href="./icon-maskable.svg" />
-    <link rel="stylesheet" href="./styles.css" />
-  </head>
-  <body>
-    <div id="app" class="app-shell"></div>
-    <script src="./music-engine.js"></script>
-    <script src="./app.js" defer></script>
-  </body>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b0b0d" />
+  <title>Gospel Path UX V2</title>
+  <style>
+    :root{
+      --bg:#f7f4ee; --paper:#fffdf8; --paper2:#ebe7de; --paper3:#dfd8cc; --ink:#111113; --muted:#6f6a62; --line:rgba(17,17,19,.14);
+      --red:#d83a3a; --green:#28844e; --blue:#2f6fde; --yellow:#c79524; --purple:#7b50d8; --orange:#d36d27;
+      --nav-h:76px; --top-h:74px; --safe-top:env(safe-area-inset-top,0px); --safe-bottom:env(safe-area-inset-bottom,0px);
+      --radius:22px; --shadow:0 20px 70px rgba(0,0,0,.13);
+      font-family:ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    html[data-theme="dark"]{
+      --bg:#0b0b0d; --paper:#151519; --paper2:#232329; --paper3:#2f2f36; --ink:#f8f3ea; --muted:#aaa49b; --line:rgba(248,243,234,.15);
+      --red:#ff6262; --green:#57cf88; --blue:#70a0ff; --yellow:#ffd15d; --purple:#aa8cff; --orange:#ff9b55;
+      --shadow:0 20px 70px rgba(0,0,0,.46);
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;}
+    button,input,select,textarea{font:inherit;color:inherit}
+    button{border:0;background:none;cursor:pointer}
+    .app{min-height:100vh;background:radial-gradient(circle at 10% 0%, color-mix(in srgb, var(--red) 10%, transparent), transparent 340px), var(--bg);padding-bottom:calc(var(--safe-bottom));}
+    .topbar{position:sticky;top:0;z-index:50;min-height:calc(var(--top-h) + var(--safe-top));padding:calc(10px + var(--safe-top)) 14px 10px;display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;border-bottom:1px solid var(--line);background:color-mix(in srgb, var(--bg) 88%, transparent);backdrop-filter:blur(18px)}
+    .brand{display:flex;align-items:center;gap:10px;min-width:0}.logo{width:42px;height:42px;border-radius:15px;background:var(--ink);color:var(--bg);display:grid;place-items:center;font-weight:950}.brand-title{margin:0;font-size:1.05rem;letter-spacing:-.03em}.brand-sub{margin:1px 0 0;font-size:.72rem;color:var(--muted);white-space:nowrap}
+    .tabs{display:flex;gap:8px;overflow:auto;justify-content:center;-webkit-overflow-scrolling:touch;scrollbar-width:none}.tabs::-webkit-scrollbar{display:none}.tab{padding:10px 14px;border-radius:999px;border:1px solid var(--line);background:var(--paper2);white-space:nowrap;font-weight:750;color:var(--muted)}.tab.active{background:var(--ink);color:var(--bg);border-color:transparent}.top-actions{display:flex;gap:8px}.icon-btn{width:42px;height:42px;border-radius:999px;background:var(--paper);border:1px solid var(--line);display:grid;place-items:center;font-weight:900}.primary{background:var(--ink);color:var(--bg);border-color:transparent}.btn{padding:11px 14px;border-radius:15px;border:1px solid var(--line);background:var(--paper2);font-weight:850;display:inline-flex;align-items:center;gap:8px;justify-content:center}.btn.primary{background:var(--ink);color:var(--bg);border-color:transparent}.btn.red{background:var(--red);color:#fff;border-color:transparent}.btn.blue{background:var(--blue);color:#fff;border-color:transparent}.btn.green{background:var(--green);color:#fff;border-color:transparent}.btn.sm{padding:8px 10px;border-radius:12px;font-size:.82rem}.page{padding:14px;max-width:1540px;margin:0 auto}.panel{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}.panel-head{padding:14px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:10px;align-items:center}.label{margin:0;text-transform:uppercase;font-size:.78rem;letter-spacing:.13em;color:var(--muted);font-weight:950}.panel-body{padding:14px}.muted{color:var(--muted)}.grid{display:grid;gap:14px}.two-col{display:grid;grid-template-columns:280px minmax(0,1fr);gap:14px}.three-col{display:grid;grid-template-columns:260px minmax(0,1fr) 340px;gap:14px}.field{display:grid;gap:6px}.field label{font-size:.72rem;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);font-weight:950}.field input,.field select,.field textarea{width:100%;border:1px solid var(--line);border-radius:14px;background:var(--paper2);padding:12px}.field textarea{min-height:92px;resize:vertical}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.spread{display:flex;justify-content:space-between;gap:12px;align-items:center}.pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;background:var(--paper2);border:1px solid var(--line);padding:6px 10px;font-size:.78rem;font-weight:800;color:var(--muted)}.dot{width:10px;height:10px;border-radius:999px;background:var(--blue)}.dot.red{background:var(--red)}.dot.green{background:var(--green)}.dot.yellow{background:var(--yellow)}.dot.purple{background:var(--purple)}.dot.orange{background:var(--orange)}
+
+    /* Songs */
+    .song-list{display:grid;gap:10px}.song-card{border:1px solid var(--line);border-radius:18px;background:var(--paper2);padding:13px;text-align:left}.song-card.active{outline:3px solid var(--blue);background:color-mix(in srgb, var(--blue) 10%, var(--paper2))}.song-card strong{display:block;font-size:1rem}.song-card span{font-size:.78rem;color:var(--muted)}.song-toolbar{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:12px}.chart-card{padding:18px}.chart-title{font-size:clamp(2.25rem,5vw,4.9rem);line-height:.9;letter-spacing:-.08em;margin:0}.section{margin-top:22px}.section-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}.section-title{display:flex;gap:8px;align-items:center;margin:0;font-size:.82rem;text-transform:uppercase;letter-spacing:.13em;font-weight:950}.chord-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.chord{position:relative;min-height:88px;border-radius:18px;border:1px solid var(--line);background:var(--paper);padding:14px;text-align:left;touch-action:manipulation}.chord.selected{outline:3px solid var(--blue);background:color-mix(in srgb, var(--blue) 7%, var(--paper))}.chord.dragging{opacity:.35}.chord.over{outline:3px dashed var(--yellow)}.chord .sym{font-size:1.35rem;font-weight:950;letter-spacing:-.05em}.chord .num{margin-top:3px;font-size:.8rem;color:var(--muted)}.chord::before{content:"";position:absolute;inset:0 auto 0 0;width:5px;border-radius:18px 0 0 18px;background:var(--blue)}.chord.green::before{background:var(--green)}.chord.red::before{background:var(--red)}.chord.yellow::before{background:var(--yellow)}.chord.purple::before{background:var(--purple)}.chord.orange::before{background:var(--orange)}.chord .handle{position:absolute;right:10px;top:8px;color:var(--muted);font-size:.8rem}.canvas-tools{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 0}.note-card{border:2px solid var(--yellow);background:color-mix(in srgb, var(--yellow) 14%, var(--paper));border-radius:18px;padding:13px;rotate:-1deg;max-width:520px;margin-top:18px;font-weight:850}.ink-box{min-height:150px;border:1px dashed var(--line);border-radius:20px;background:color-mix(in srgb, var(--paper2) 70%, transparent);margin-top:14px;padding:14px;position:relative;overflow:hidden}.ink{font-family:"Marker Felt", "Comic Sans MS", cursive;color:var(--blue);font-size:2.1rem;rotate:-2deg}.convert-preview{margin-top:12px;border:1px solid var(--line);background:var(--paper2);border-radius:18px;padding:13px}.hideable.is-hidden{display:none!important}
+
+    /* Inspector */
+    .inspector{display:grid;gap:14px}.big-chord{font-size:3rem;line-height:.9;font-weight:950;letter-spacing:-.08em}.voicing{border:1px solid var(--line);border-radius:18px;background:var(--paper2);padding:14px}.voicing strong{font-size:1.12rem}.mini-tabs{display:flex;gap:8px;flex-wrap:wrap}.mini{padding:8px 10px;border-radius:999px;background:var(--paper2);border:1px solid var(--line);font-size:.78rem;font-weight:850;color:var(--muted)}.mini.active{background:var(--red);color:#fff;border-color:transparent}.option-list{display:grid;gap:8px}.option{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;border:1px solid var(--line);background:var(--paper2);border-radius:16px;padding:10px;text-align:left}.option b{display:block}.option small{color:var(--muted)}.use{background:var(--ink);color:var(--bg);border-radius:999px;padding:7px 10px;font-size:.75rem;font-weight:900}.drawbars{display:flex;align-items:end;height:108px;gap:6px;border:1px solid var(--line);border-radius:18px;background:var(--paper2);padding:12px}.draw{flex:1;border-radius:999px 999px 4px 4px;background:var(--ink)}.draw:nth-child(1),.draw:nth-child(2){height:95%}.draw:nth-child(3){height:85%}.draw:nth-child(4){height:58%}.draw:nth-child(5){height:25%}.draw:nth-child(6){height:15%}.draw:nth-child(n+7){height:8%}
+
+    /* Page-specific */
+    .builder-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}.result-list{display:grid;gap:12px}.route-card{border:1px solid var(--line);background:var(--paper);border-radius:20px;padding:14px}.chord-line{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.token{border-radius:999px;background:var(--paper2);border:1px solid var(--line);padding:8px 10px;font-weight:900}.token.red{border-color:color-mix(in srgb, var(--red) 55%, var(--line));color:var(--red)}.token.blue{border-color:color-mix(in srgb, var(--blue) 55%, var(--line));color:var(--blue)}.token.green{border-color:color-mix(in srgb, var(--green) 55%, var(--line));color:var(--green)}.fat-palette{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.fat{border:1px solid var(--line);background:var(--paper2);border-radius:18px;padding:14px;text-align:left;min-height:84px}.fat b{font-size:1.2rem;display:block}.fat small{color:var(--muted)}.lick-notes{font-size:1.25rem;font-weight:950;letter-spacing:.03em;line-height:1.5}.preset-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.preset{border:1px solid var(--line);border-radius:20px;background:var(--paper);padding:14px}.shout-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.live-page{min-height:calc(100vh - var(--top-h) - 40px);display:grid;place-items:center}.live-card{width:min(900px,100%);border-radius:30px;background:var(--paper);border:1px solid var(--line);box-shadow:var(--shadow);padding:clamp(18px,4vw,42px)}.live-title{font-size:clamp(2.4rem,8vw,6rem);letter-spacing:-.09em;line-height:.88;margin:0}.live-section{font-size:1rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);font-weight:950;margin:24px 0 12px}.live-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.live-chord{border-radius:22px;border:1px solid var(--line);background:var(--paper2);padding:20px;text-align:center}.live-chord b{font-size:clamp(1.6rem,5vw,3.5rem);display:block;letter-spacing:-.06em}.live-chord span{color:var(--muted)}.live-controls{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:22px}
+
+    /* Mobile */
+    .bottom-nav{display:none}.peek{display:none}.toast{position:fixed;z-index:100;left:50%;bottom:calc(90px + var(--safe-bottom));transform:translateX(-50%);background:var(--ink);color:var(--bg);border-radius:999px;padding:10px 14px;font-weight:850;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:.2s}.toast.show{opacity:1;transform:translateX(-50%) translateY(-4px)}
+    @media (max-width:1180px){.three-col{grid-template-columns:minmax(0,1fr)}.desktop-inspector{display:none}.two-col{grid-template-columns:1fr}.builder-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.fat-palette{grid-template-columns:repeat(2,minmax(0,1fr))}.preset-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media (max-width:760px){:root{--top-h:116px;--nav-h:74px}.topbar{grid-template-columns:1fr auto}.tabs{grid-column:1/-1;justify-content:flex-start}.brand-sub{display:none}.page{padding:10px 10px calc(var(--nav-h) + 22px + var(--safe-bottom))}.top-actions .install{display:none}.panel{border-radius:20px}.panel-body{padding:12px}.chart-card{padding:13px}.chart-title{font-size:2.15rem}.chord-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.chord{min-height:76px;padding:12px}.chord .sym{font-size:1.1rem}.song-toolbar{grid-template-columns:1fr 1fr}.builder-grid{grid-template-columns:1fr 1fr}.builder-grid .span{grid-column:1/-1}.fat-palette{grid-template-columns:1fr 1fr}.shout-grid,.preset-grid{grid-template-columns:1fr}.live-grid{grid-template-columns:repeat(2,1fr)}.live-controls{grid-template-columns:1fr 1fr}.tabs.top-tabs{display:none}.bottom-nav{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;left:0;right:0;bottom:0;z-index:65;padding:8px 10px calc(8px + var(--safe-bottom));border-top:1px solid var(--line);background:color-mix(in srgb, var(--bg) 92%, transparent);backdrop-filter:blur(18px)}.bottom-nav button{padding:10px 4px;border-radius:16px;color:var(--muted);font-weight:850}.bottom-nav button.active{background:var(--ink);color:var(--bg)}.peek{display:block;position:fixed;left:12px;right:12px;bottom:calc(var(--nav-h) + 12px + var(--safe-bottom));z-index:62;background:var(--paper);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);padding:12px;transform:translateY(130%);transition:.22s}.peek.show{transform:translateY(0)}.peek-head{display:flex;justify-content:space-between;gap:10px}.peek-title{font-size:1.55rem;font-weight:950;letter-spacing:-.06em}.peek-close{width:36px;height:36px;border-radius:999px;background:var(--paper2);border:1px solid var(--line);font-size:1.2rem}.peek .voicing{padding:11px;margin-top:10px}.peek p{margin:8px 0 0;color:var(--muted);line-height:1.35}.desktop-only{display:none!important}.ink{font-size:1.55rem}.note-card{rotate:0}.field textarea{min-height:72px}}
+  </style>
+</head>
+<body>
+<div class="app" id="app">
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">GP</div>
+      <div><h1 class="brand-title">Gospel Path</h1><p class="brand-sub">Songs · paths · licks · organ · live</p></div>
+    </div>
+    <nav class="tabs top-tabs" id="topTabs"></nav>
+    <div class="top-actions">
+      <button class="icon-btn" onclick="toggleTheme()" aria-label="Toggle theme">◐</button>
+      <button class="icon-btn primary install" onclick="toast('Installable PWA shell in the full app.')">↧</button>
+    </div>
+  </header>
+
+  <main class="page" id="page"></main>
+
+  <nav class="bottom-nav" id="bottomNav"></nav>
+
+  <section class="peek" id="peek" aria-label="Chord fingering peek">
+    <div class="peek-head"><div><div class="peek-title" id="peekChord">Fadd2</div><div class="muted" id="peekNum">1 in F</div></div><button class="peek-close" onclick="closePeek()">×</button></div>
+    <div class="voicing"><div id="peekLH">LH: F - C</div><strong id="peekRH">RH: A - C - G</strong></div>
+    <p id="peekDesc">Home base. Safe and bright.</p>
+    <div class="row" style="margin-top:10px"><button class="btn sm" onclick="openTab('chord')">More</button><button class="btn sm blue" onclick="attachLick()">Lick</button><button class="btn sm green" onclick="openTab('organ')">Organ</button></div>
+  </section>
+
+  <div class="toast" id="toast"></div>
+</div>
+
+<script>
+const tabs = [
+  {id:'songs', label:'Songs'}, {id:'path', label:'Path'}, {id:'chord', label:'Chord'}, {id:'licks', label:'Licks'}, {id:'shout', label:'Shout'}, {id:'organ', label:'Organ'}, {id:'live', label:'Live'}
+];
+const mobileTabs = ['songs','path','chord','licks','live'];
+const fatOptions = [
+  {symbol:'Fmaj13', num:'1 fat', color:'orange', lh:'LH: F - C', rh:'RH: E - A - D - G', desc:'Fat major color. Use on intros, endings, or when the singer gives you space.'},
+  {symbol:'F6/9', num:'1 soft', color:'green', lh:'LH: F - C', rh:'RH: A - D - G', desc:'Warm, clean, and not too jazzy. Good for praise songs.'},
+  {symbol:'Bbmaj13(#11)', num:'4 color', color:'purple', lh:'LH: Bb - F', rh:'RH: A - C - E - G', desc:'Bright raised-11 lift chord. Beautiful but use intentionally.'},
+  {symbol:'Bbmaj9', num:'4', color:'blue', lh:'LH: Bb - F', rh:'RH: A - C - D - F', desc:'Open 4 chord. Works almost anywhere.'},
+  {symbol:'Dm11', num:'6m11', color:'blue', lh:'LH: D - C', rh:'RH: F - G - A - E', desc:'Wide minor 11. Great for altar, bridge, and soft preacher beds.'},
+  {symbol:'Gm11', num:'2m11', color:'purple', lh:'LH: G - F', rh:'RH: Bb - C - D - A', desc:'Churchy 2 minor before the 5.'},
+  {symbol:'C13sus', num:'5sus', color:'red', lh:'LH: C - Bb', rh:'RH: F - A - D', desc:'Suspended pull chord. Great before going home.'},
+  {symbol:'C13b9', num:'5 alt', color:'red', lh:'LH: C - Bb', rh:'RH: E - Bb - Db - A', desc:'Strong dominant tension. Hit it quickly before resolving home.'}
+];
+const baseSongs = [
+  {id:'day', title:'This Is The Day', key:'F', feel:'bright praise', category:'Kids / Congregational', sections:[
+    {id:'s1', name:'Verse / Chorus', color:'green', chords:[
+      chord('c1','Fadd2','1','green','LH: F - C','RH: A - C - G','Home base. Safe, bright, and easy for a congregation.'),
+      chord('c2','Bbadd2','4','blue','LH: Bb - F','RH: D - F - C','The lift chord. Good for opening the sound without getting too spicy.'),
+      chord('c3','F/C','1/5','green','LH: C','RH: A - C - F','Stable inversion. Good before the 5 or a simple ending.'),
+      chord('c4','C13sus','5sus','red','LH: C - Bb','RH: F - A - D','Pull chord. Suspended color that wants to resolve home.')
+    ]},
+    {id:'s2', name:'Gospel Ending', color:'red', chords:[
+      chord('c5','Fmaj9','1','green','LH: F - C','RH: E - A - C - G','Clean ending color.'),
+      chord('c6','Bbmaj9','4','blue','LH: Bb - F','RH: A - C - D - F','Lift before the turnaround.'),
+      chord('c7','Bdim7','#4dim','purple','LH: B','RH: D - F - Ab','Diminished connector into the 1 over 5.'),
+      chord('c8','C7','5','orange','LH: C - Bb','RH: E - G - Bb','Dominant landing back to the 1.')
+    ]}
+  ]},
+  {id:'army', title:'I’m In The Lord’s Army', key:'G', feel:'march praise', category:'Kids / Praise', sections:[
+    {id:'a1', name:'March Chorus', color:'green', chords:[
+      chord('a1c1','G','1','green','LH: G - D','RH: B - D - G','Simple march home chord.'),
+      chord('a1c2','C','4','blue','LH: C - G','RH: E - G - C','Simple 4 lift.'),
+      chord('a1c3','G/D','1/5','green','LH: D','RH: B - D - G','Keeps the bass marching.'),
+      chord('a1c4','D7','5','orange','LH: D - C','RH: F# - A - C','Dominant back home.')
+    ]}
+  ]},
+  {id:'preacher', title:'Preacher Build Template', key:'Eb', feel:'talk bed', category:'Preacher / Organ', sections:[
+    {id:'p1', name:'Talk Bed', color:'purple', chords:[
+      chord('p1c1','Ebmaj9','1','green','LH: Eb - Bb','RH: G - D - F','Soft home bed.'),
+      chord('p1c2','Abmaj13','4 fat','blue','LH: Ab - Eb','RH: G - C - F','Big lift without forcing movement.'),
+      chord('p1c3','G7#5','3dom','red','LH: G - F','RH: B - Eb - A','Passing pull to 6m.'),
+      chord('p1c4','Cm11','6m11','purple','LH: C - Bb','RH: Eb - F - G - D','Minor color for a preacher swell.')
+    ]}
+  ]}
+];
+function chord(id,symbol,num,color,lh,rh,desc){return {id,symbol,num,color,lh,rh,desc};}
+let state = loadState() || {tab:'songs', songs:baseSongs, songId:'day', selectedChordId:'c1', showExplanation:true, liveIndex:0};
+function saveState(){localStorage.setItem('gospel-path-ux-v2', JSON.stringify(state));}
+function loadState(){try{return JSON.parse(localStorage.getItem('gospel-path-ux-v2'))}catch(e){return null}}
+function currentSong(){return state.songs.find(s=>s.id===state.songId)||state.songs[0];}
+function allChords(song=currentSong()){return song.sections.flatMap(s=>s.chords.map(c=>({...c,sectionId:s.id})));}
+function selectedChord(){return allChords().find(c=>c.id===state.selectedChordId) || allChords()[0];}
+function selectChord(id){state.selectedChordId=id; saveState(); render(); showPeek(selectedChord());}
+function showPeek(c){ if(!c) return; const el=id=>document.getElementById(id); el('peekChord').textContent=c.symbol; el('peekNum').textContent=c.num+' in '+currentSong().key; el('peekLH').textContent=c.lh; el('peekRH').textContent=c.rh; el('peekDesc').textContent=c.desc; el('peek').classList.add('show'); }
+function closePeek(){document.getElementById('peek').classList.remove('show');}
+function openTab(id){state.tab=id; saveState(); render();}
+function toggleTheme(){const html=document.documentElement; html.dataset.theme = html.dataset.theme==='dark'?'light':'dark';}
+function toast(msg){const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1600);}
+function renderTabs(){
+  document.getElementById('topTabs').innerHTML=tabs.map(t=>`<button class="tab ${state.tab===t.id?'active':''}" onclick="openTab('${t.id}')">${t.label}</button>`).join('');
+  document.getElementById('bottomNav').innerHTML=mobileTabs.map(id=>{let t=tabs.find(x=>x.id===id);return `<button class="${state.tab===id?'active':''}" onclick="openTab('${id}')">${t.label}</button>`}).join('');
+}
+function render(){renderTabs(); closePeek(); const page=document.getElementById('page');
+  if(state.tab==='songs') page.innerHTML=renderSongsPage();
+  if(state.tab==='path') page.innerHTML=renderPathPage();
+  if(state.tab==='chord') page.innerHTML=renderChordPage();
+  if(state.tab==='licks') page.innerHTML=renderLicksPage();
+  if(state.tab==='shout') page.innerHTML=renderShoutPage();
+  if(state.tab==='organ') page.innerHTML=renderOrganPage();
+  if(state.tab==='live') page.innerHTML=renderLivePage();
+}
+function renderSongsPage(){const s=currentSong();return `
+  <div class="three-col">
+    <aside class="panel">
+      <div class="panel-head"><h2 class="label">Songs</h2><span class="pill">${state.songs.length} saved</span></div>
+      <div class="panel-body song-list">
+        ${state.songs.map(song=>`<button class="song-card ${song.id===state.songId?'active':''}" onclick="state.songId='${song.id}';state.selectedChordId='${song.sections[0].chords[0].id}';saveState();render()"><strong>${song.title}</strong><span>${song.key} · ${song.feel} · ${song.category}</span></button>`).join('')}
+        <button class="btn primary" onclick="addSong()">+ Add My Song</button>
+      </div>
+    </aside>
+    <section class="panel chart-card">
+      <div class="spread"><div><h1 class="chart-title">${s.title}</h1><div class="row" style="margin-top:10px"><span class="pill">Key ${s.key}</span><span class="pill">${s.feel}</span><span class="pill">${s.category}</span></div></div><button class="btn green" onclick="openTab('live')">Live</button></div>
+      <div class="song-toolbar"><button class="btn" onclick="addSection()">Add Section</button><button class="btn" onclick="addChordToSelected()">Add Chord</button><button class="btn" onclick="duplicateSong()">Duplicate</button><button class="btn" onclick="toast('Saved locally.')">Save</button></div>
+      ${renderChart(s)}
+      <div class="canvas-tools"><button class="btn sm blue">Pen</button><button class="btn sm">Highlight</button><button class="btn sm">Text Box</button><button class="btn sm">Convert</button><button class="btn sm">Lock</button></div>
+      <div class="note-card">Text note: Hold here if preacher starts talking. Switch organ Leslie slow.</div>
+      <div class="ink-box"><div class="ink">1 - 4 - 3 - 5 b6 b7</div><div class="convert-preview"><b>Handwriting convert preview</b><p class="muted">Detected as number progression. Tap convert to make these pressable chords.</p><button class="btn sm" onclick="convertInk()">Convert to Text</button></div></div>
+    </section>
+    <aside class="panel desktop-inspector">${renderInspector()}</aside>
+  </div>`}
+function renderChart(s){return s.sections.map(sec=>`<section class="section"><div class="section-head"><h3 class="section-title"><span class="dot ${sec.color}"></span>${sec.name}</h3><button class="btn sm" onclick="replaceSectionWithPath('${sec.id}')">Replace section with path</button></div><div class="chord-grid">${sec.chords.map(c=>renderChord(c, sec.id)).join('')}</div></section>`).join('')}
+function renderChord(c,sectionId){return `<button class="chord ${c.color} ${state.selectedChordId===c.id?'selected':''}" draggable="true" ondragstart="dragStart(event,'${c.id}')" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropChord(event,'${sectionId}','${c.id}')" onclick="selectChord('${c.id}')"><span class="handle">⋮⋮</span><div class="sym">${c.symbol}</div><div class="num">${c.num}</div></button>`}
+function renderInspector(){const c=selectedChord();return `<div class="panel-head"><h2 class="label">Chord Detail</h2><span class="pill">${c.num}</span></div><div class="panel-body inspector">
+  <div><div class="big-chord">${c.symbol}</div><div class="muted">${c.num} in ${currentSong().key} · piano fingering</div></div>
+  <div class="mini-tabs"><button class="mini active">Easy</button><button class="mini">Churchy</button><button class="mini">Spicy</button><button class="mini">Organ</button><button class="mini">Licks</button></div>
+  <div class="voicing"><b>Fingering</b><p>${c.lh}</p><strong>${c.rh}</strong><p class="muted">RH fingers: 1 - 2 - 4 - 5 when possible.</p></div>
+  <button class="btn sm" onclick="state.showExplanation=!state.showExplanation;saveState();render()">${state.showExplanation?'Hide':'Show'} explanation</button>
+  <p class="muted hideable ${state.showExplanation?'':'is-hidden'}">${c.desc}</p>
+  <div><h3 class="label" style="margin-bottom:10px">Replace selected chord</h3><div class="option-list">${fatOptions.slice(0,6).map(o=>`<button class="option" onclick="replaceSelected('${o.symbol}','${o.num}','${o.color}','${o.lh}','${o.rh}','${o.desc}')"><span><b>${o.symbol}</b><small>${o.num} · ${o.desc}</small></span><span class="use">Use</span></button>`).join('')}</div></div>
+  <div class="voicing"><b>Organ</b><div class="drawbars">${'<i class="draw"></i>'.repeat(9)}</div><p class="muted">Upper 888400000 · Leslie slow, fast on swell.</p></div>
+</div>`}
+function renderPathPage(){return `<div class="two-col"><section class="panel"><div class="panel-head"><h2 class="label">Path Builder</h2><span class="pill">Mess with movement</span></div><div class="panel-body grid"><div class="builder-grid"><div class="field"><label>Key</label><select id="pathKey"><option>F</option><option>Eb</option><option>Ab</option><option>Db</option><option>G</option></select></div><div class="field"><label>From</label><input id="pathFrom" value="1"></div><div class="field"><label>To</label><input id="pathTo" value="4"></div><div class="field"><label>Style</label><select id="pathStyle"><option>Gospel</option><option>CCM</option><option>Preacher</option><option>Shout</option><option>Weird Reharm</option></select></div><div class="field"><label>Intensity</label><select><option>Safe</option><option selected>Churchy</option><option>Spicy</option><option>Wild</option></select></div><div class="field span"><label>&nbsp;</label><button class="btn primary" onclick="toast('Built three routes.')">Build Routes</button></div></div>${renderRoutes()}</div></section><aside class="panel"><div class="panel-head"><h2 class="label">Current Song</h2><button class="btn sm" onclick="openTab('songs')">Open</button></div><div class="panel-body">${renderSmallChart()}</div></aside></div>`}
+function renderRoutes(){const routes=[
+ {name:'Safe', desc:'Works under singing. Low risk.', chords:['Fadd2','Bbadd2','F/C','C13sus','Fadd2']},
+ {name:'Churchy', desc:'3-6-2-5 flavor before resolving.', chords:['Fmaj9','A7#5','Dm11','G13','C13sus','Fmaj13']},
+ {name:'Spicy', desc:'Use for intro, solo piano, or a preacher swell.', chords:['Fmaj13','Abmaj7(#11)','Gm11','C13b9','F6/9']}
+];return `<div class="result-list">${routes.map((r,i)=>`<div class="route-card"><div class="spread"><div><b>${r.name} Route</b><p class="muted" style="margin:.25rem 0 0">${r.desc}</p></div><button class="btn sm blue" onclick="useRoute(${i})">Use in song</button></div><div class="chord-line">${r.chords.map((x,j)=>`<span class="token ${j%3===0?'green':j%3===1?'blue':'red'}">${x}</span>`).join('')}</div><button class="btn sm" onclick="toast('Explanation hidden/shown per route.')">Hide explanation</button></div>`).join('')}</div>`}
+function renderSmallChart(){const s=currentSong();return `<h2 style="margin-top:0">${s.title}</h2>${renderChart(s)}`}
+function renderChordPage(){const c=selectedChord();return `<div class="two-col"><section class="panel"><div class="panel-head"><h2 class="label">Chord Lab</h2><span class="pill">Tap a color</span></div><div class="panel-body grid"><div class="builder-grid"><div class="field"><label>Chord</label><input value="${c.symbol}" oninput="document.getElementById('labName').textContent=this.value"></div><div class="field"><label>Key</label><select><option>${currentSong().key}</option><option>Eb</option><option>Ab</option><option>Db</option></select></div><div class="field"><label>Hand size</label><select><option>Medium</option><option>Small</option><option>Large</option></select></div><div class="field"><label>Level</label><select><option>Easy</option><option selected>Churchy</option><option>Shed</option></select></div><div class="field span"><label>&nbsp;</label><button class="btn primary" onclick="toast('Generated fingerings.')">Generate Fingerings</button></div></div><div class="voicing"><div class="big-chord" id="labName">${c.symbol}</div><p>${c.lh}</p><strong>${c.rh}</strong><p class="muted">Tap a fat chord below to replace the selected chord in the song.</p></div><h3 class="label">Fat Chord Palette</h3><div class="fat-palette">${fatOptions.map(o=>`<button class="fat" onclick="replaceSelected('${o.symbol}','${o.num}','${o.color}','${o.lh}','${o.rh}','${o.desc}')"><b>${o.symbol}</b><small>${o.num} · ${o.desc}</small></button>`).join('')}</div></div></section><aside class="panel"><div class="panel-head"><h2 class="label">Where next?</h2></div><div class="panel-body option-list">${['Go to 4','Go home to 1','Build to preacher chord','Make it shout','Modulate up'].map(x=>`<button class="option" onclick="toast('${x} route created.')"><span><b>${x}</b><small>Creates a path from ${c.symbol}</small></span><span class="use">Build</span></button>`).join('')}</div></aside></div>`}
+function renderLicksPage(){return `<div class="two-col"><section class="panel"><div class="panel-head"><h2 class="label">Lick Builder</h2><span class="pill">Target-aware runs</span></div><div class="panel-body grid"><div class="builder-grid"><div class="field"><label>Key</label><select><option>${currentSong().key}</option><option>Eb</option><option>Ab</option><option>Db</option></select></div><div class="field"><label>Over chord</label><input value="${selectedChord().symbol}"></div><div class="field"><label>Target</label><input value="${nextChordSymbol()}"></div><div class="field"><label>Style</label><select><option>Gospel blues</option><option>Shout</option><option>Neo soul</option><option>CCM fill</option></select></div><div class="field"><label>Speed</label><select><option>Slow</option><option selected>Medium</option><option>Fast Triplets</option></select></div><div class="field span"><label>&nbsp;</label><button class="btn primary" onclick="toast('Generated new lick.')">Make Lick</button></div></div><div class="route-card"><div class="spread"><div><b>Into ${nextChordSymbol()}</b><p class="muted">Gospel blues approach notes resolving into the target chord.</p></div><button class="btn sm blue" onclick="attachLick()">Attach to selected chord</button></div><div class="lick-notes">A - C - C# - D - F - G - A - G - F</div><p class="muted">RH fingers: 1 - 2 - 3 - 1 - 2 - 4 - 5 - 4 - 2</p></div><div class="route-card"><b>Shout pickup</b><div class="lick-notes">F - G - A - C - D - Eb - E - F</div><p class="muted">Use before a hit or transition back to the 1.</p></div></div></section><aside class="panel"><div class="panel-head"><h2 class="label">Saved Runs</h2></div><div class="panel-body option-list">${['Into the 1','Into the 4','Ending run','Preacher fill','Organ smear'].map(x=>`<button class="option"><span><b>${x}</b><small>Tap to preview or attach</small></span><span class="use">Use</span></button>`).join('')}</div></aside></div>`}
+function renderShoutPage(){return `<section class="panel"><div class="panel-head"><h2 class="label">Shout / Praise Break</h2><span class="pill">Hits · walkups · preacher punches</span></div><div class="panel-body grid"><div class="shout-grid">${[
+ ['Basic Shout','1 → 4 → 1 → 5','Safe praise break starter.'],['Walkup','1 → 2 → 3 → 4 → #4 → 5','Bass movement for energy.'],['Preacher Punch','1 hit · b7 hit · 4 hit · 5 stab','Call-response backing.'],['Ending','1 → 4 → #4dim → 1/5 → 5 → 1','Church ending.']
+].map(x=>`<div class="route-card"><div class="spread"><div><b>${x[0]}</b><p class="muted">${x[2]}</p></div><button class="btn sm blue" onclick="toast('${x[0]} added to song.')">Use</button></div><div class="chord-line">${x[1].split(' → ').map(t=>`<span class="token">${t}</span>`).join('')}</div></div>`).join('')}</div></div></section>`}
+function renderOrganPage(){return `<section class="panel"><div class="panel-head"><h2 class="label">Organ</h2><span class="pill">Drawbars · Leslie · manuals</span></div><div class="panel-body grid"><div class="preset-grid">${[
+ ['Preacher Talk Bed','Upper 888000000 · Lower 008800000','Leslie slow · expression 40-60%'],['Altar Swell','Upper 888400000 · Lower 004400000','Slow then fast on swell'],['Shout Lead','Upper 888888000 · Lower 808000000','Leslie fast · percussion on'],['Soft Worship','Upper 808400000 · Lower 006600000','Slow · no percussion'],['Choir Drive','Upper 888640000 · Lower 808400000','Fast on hits'],['Fat Ending','Upper 888888888 · Lower 888000000','Full drawbars for final chord']
+].map(p=>`<div class="preset"><h3>${p[0]}</h3><div class="drawbars">${'<i class="draw"></i>'.repeat(9)}</div><p class="muted"><b>${p[1]}</b><br>${p[2]}</p><button class="btn sm blue" onclick="toast('${p[0]} attached.')">Attach to chord</button></div>`).join('')}</div></div></section>`}
+function renderLivePage(){const s=currentSong();const sec=s.sections[state.liveIndex%s.sections.length];return `<section class="live-page"><div class="live-card"><div class="spread"><div><h1 class="live-title">${s.title}</h1><div class="row" style="margin-top:12px"><span class="pill">Key ${s.key}</span><span class="pill">Locked</span><span class="pill">${s.feel}</span></div></div><button class="btn" onclick="toast('Live orientation locked.')">Lock</button></div><div class="live-section">${sec.name}</div><div class="live-grid">${sec.chords.map(c=>`<button class="live-chord" onclick="selectChord('${c.id}')"><b>${c.symbol}</b><span>${c.num}</span></button>`).join('')}</div><div class="live-controls"><button class="btn" onclick="prevSection()">Prev</button><button class="btn primary" onclick="nextSection()">Next</button><button class="btn" onclick="toast('Ending loaded.')">Ending</button><button class="btn red" onclick="toast('Panic safe: stay on 1add2 or go to 4maj9.')">Panic Safe</button></div></div></section>`}
+function addSong(){const id='song'+Date.now(); state.songs.push({id,title:'New Song',key:'F',feel:'custom',category:'My Songs',sections:[{id:id+'s',name:'Section A',color:'green',chords:[chord(id+'c','Fadd2','1','green','LH: F - C','RH: A - C - G','Safe starting chord.')] }]}); state.songId=id; state.selectedChordId=id+'c'; saveState(); render();}
+function duplicateSong(){const s=JSON.parse(JSON.stringify(currentSong())); s.id='copy'+Date.now(); s.title=s.title+' Copy'; s.sections.forEach(sec=>{sec.id='sec'+Math.random();sec.chords.forEach(c=>c.id='c'+Math.random())}); state.songs.push(s); state.songId=s.id; state.selectedChordId=s.sections[0].chords[0].id; saveState(); render();}
+function addSection(){const s=currentSong(); const id='sec'+Date.now(); s.sections.push({id,name:'New Section',color:'yellow',chords:[chord('c'+Date.now(),'Fmaj9','1','green','LH: F - C','RH: E - A - C - G','New section starting point.')]}); saveState(); render();}
+function addChordToSelected(){const s=currentSong(); const sec=s.sections[0]; const id='c'+Date.now(); sec.chords.push(chord(id,'C13sus','5sus','red','LH: C - Bb','RH: F - A - D','Added pull chord.')); state.selectedChordId=id; saveState(); render();}
+function replaceSelected(symbol,num,color,lh,rh,desc){const c=findChord(state.selectedChordId); if(!c) return; Object.assign(c,{symbol,num,color,lh,rh,desc}); saveState(); render(); showPeek(c); toast('Replaced selected chord.');}
+function findChord(id){for(const s of state.songs){for(const sec of s.sections){const c=sec.chords.find(x=>x.id===id); if(c) return c;}}return null}
+let draggedId=null;function dragStart(e,id){draggedId=id;e.currentTarget.classList.add('dragging');}function dragOver(e){e.preventDefault();e.currentTarget.classList.add('over')}function dragLeave(e){e.currentTarget.classList.remove('over')}function dropChord(e,sectionId,targetId){e.preventDefault();document.querySelectorAll('.chord').forEach(x=>x.classList.remove('over','dragging')); if(!draggedId||draggedId===targetId)return; const sec=currentSong().sections.find(s=>s.id===sectionId); if(!sec)return; const from=sec.chords.findIndex(c=>c.id===draggedId); const to=sec.chords.findIndex(c=>c.id===targetId); if(from<0||to<0)return; const [moved]=sec.chords.splice(from,1); sec.chords.splice(to,0,moved); saveState(); render(); toast('Progression reordered.');}
+function useRoute(i){const sets=[['Fadd2','Bbadd2','F/C','C13sus','Fadd2'],['Fmaj9','A7#5','Dm11','G13','C13sus','Fmaj13'],['Fmaj13','Abmaj7(#11)','Gm11','C13b9','F6/9']]; const sec=currentSong().sections[0]; sec.chords=sets[i].map((sym,idx)=>chord('r'+Date.now()+idx,sym,idx===0?'1':idx===1?'3/4':'path',idx%3===0?'green':idx%3===1?'blue':'red','LH: root - 7','RH: guide tones + color','Route chord generated from Path Builder.')); state.selectedChordId=sec.chords[0].id; saveState(); render(); toast('Route replaced first section.');}
+function replaceSectionWithPath(sectionId){const sec=currentSong().sections.find(s=>s.id===sectionId); if(!sec)return; const route=['Fmaj13','A7#5','Dm11','G13','C13sus','F6/9']; sec.chords=route.map((sym,i)=>chord('rp'+Date.now()+i,sym,['1','3dom','6m11','2dom','5sus','1'][i],i%2?'red':'blue','LH: root - color','RH: fat voicing','Replaced from sidebar/path option.')); state.selectedChordId=sec.chords[0].id; saveState(); render(); toast('Section replaced with path.');}
+function convertInk(){const sec=currentSong().sections[0]; const items=['Fadd2','Bbadd2','A7#5','C13sus','Dbmaj13','Eb13']; sec.chords=items.map((sym,i)=>chord('ink'+Date.now()+i,sym,['1','4','3dom','5sus','b6','b7'][i],i%3===0?'green':i%3===1?'blue':'red','LH: root - 5th','RH: generated color voicing','Converted from handwritten numbers.')); state.selectedChordId=sec.chords[0].id; saveState(); render(); toast('Ink converted into pressable chords.');}
+function nextChordSymbol(){const arr=allChords(); const idx=arr.findIndex(c=>c.id===state.selectedChordId); return arr[(idx+1+arr.length)%arr.length]?.symbol || 'Fadd2'}
+function attachLick(){toast('Lick attached to selected chord.');}
+function nextSection(){state.liveIndex++; saveState(); render();}function prevSection(){state.liveIndex=Math.max(0,state.liveIndex-1); saveState(); render();}
+render();
+</script>
+</body>
 </html>
